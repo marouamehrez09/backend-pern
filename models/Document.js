@@ -15,7 +15,7 @@ const Document = sequelize.define('Document', {
         type: DataTypes.STRING 
     },
     type: { 
-        type: DataTypes.ENUM("contrat" , "attestation presence" , "attestation travail", "certificat")
+        type: DataTypes.ENUM("contrat" , "attestation presence" , "attestation travail", "certificat presence")
     },
     //filePath: { 
     //    type: DataTypes.STRING 

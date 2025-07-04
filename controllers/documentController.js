@@ -32,8 +32,7 @@ exports.downloadDocument = async (req, res) => {
 };
 
 //  Ajouter un document
-{
-  /*exports.uploadDocument = async (req, res) => {
+{/*exports.uploadDocument = async (req, res) => {
     try {
         //console.log('req.file:', req.file);
         //console.log('req.body:', req.body);
@@ -88,8 +87,7 @@ exports.uploadDocument = async (req, res) => {
 };
 
 //  Mettre à jour un document
-{
-  /*exports.updateDocument = async (req, res) => {
+{/*exports.updateDocument = async (req, res) => {
     try {
         const { title, type } = req.body;
         console.log("PUT /api/document/:id", req.params.id, title, type);
