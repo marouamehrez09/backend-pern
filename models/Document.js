@@ -17,10 +17,13 @@ const Document = sequelize.define('Document', {
     type: { 
         type: DataTypes.ENUM("contrat" , "attestation presence" , "attestation travail", "certificat")
     },
-    filePath: { 
-        type: DataTypes.STRING 
-    }, 
-
+    //filePath: { 
+    //    type: DataTypes.STRING 
+    //},
+    fileUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,  
+    },
 }, { 
     timestamps: true ,
     tableName: 'Documents'

@@ -36,7 +36,7 @@ router.post('/upload', protect, upload.single('file'), uploadDocument);
 router.get('/by-email/:email', protect, getDocumentsByEmployee);
 
 //  Générer automatiquement une attestation (admin)
-router.post('/generate-attestation', protect, isAdmin, generateAttestation);
+//router.post('/generate-attestation', protect, isAdmin, generateAttestation);
 
 //  Télécharger un document (authentifié)
 router.get('/download/:id', protect, downloadDocument);
