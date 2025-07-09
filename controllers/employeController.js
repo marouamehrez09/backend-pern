@@ -76,13 +76,16 @@ const updateEmploye = async (req, res) => {
     const user = await Employe.findByPk(req.params.id);
     if (!user)
       return res.status(404).json({ message: "Employe non trouvé." });
+    
+    const updatedFields = { name, email, role, salaire, leaveBalance };
 
-    if (password) {
+    if (password && password.trim() !== "") {
       const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      updatedFields.password = hashedPassword;
     }
 
-    await user.update({ name, email, role, salaire, leaveBalance });
+    await user.update(updatedFields);
     res.status(200).json({ message: "Employe mis à jour.", user });
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur.", error: err.message });
@@ -103,15 +106,29 @@ const deleteEmploye = async (req, res) => {
   }
 };
 // Lire les infos de profil de l'utilisateur connecté
-const getProfile = async (req, res) => {
+{/*const getProfile = async (req, res) => {
   try {
     console.log("req.user = ", req.user); 
-    const { name, email, role } = req.user; // On extrait uniquement ce qui nous intéresse
-    res.status(200).json({ name, email, role });
+    const { id, name, email, role } = req.user; // On extrait uniquement ce qui nous intéresse
+    res.status(200).json({id, name, email, role });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};*/}
+const getProfile = async (req, res) => {
+  try {
+    const user = await Employe.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
 };
+
 
 
 module.exports = {

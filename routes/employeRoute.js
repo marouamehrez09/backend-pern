@@ -13,9 +13,9 @@ const isAdmin = require("../middlewares/isAdmin");
 
 router.get("/profile", protect, getProfile);
 router.get("/", protect, getAllEmployes);
-router.post("/register", registerEmploye);
+router.post("/register", protect, isAdmin, registerEmploye);
 router.get("/:id", protect, isAdmin, getEmployeById);
-router.put("/:id", protect, isAdmin, updateEmploye);
+router.put("/:id", protect, updateEmploye);
 router.delete("/:id", protect, isAdmin, deleteEmploye);
 
 module.exports = router;
