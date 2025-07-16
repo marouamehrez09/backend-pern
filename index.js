@@ -4,6 +4,7 @@ const authRoute = require('./routes/authRoute.js');
 const employeRoute = require('./routes/employeRoute');
 const congeRoute = require('./routes/congeRoute');
 const documentRoute = require('./routes/documentRoute.js');
+const suggestionRoute = require('./routes/suggestionRoute.js');
 require('dotenv').config();
 const morgan = require('morgan');
 const cron = require('node-cron');
@@ -30,6 +31,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/user', employeRoute);
 app.use('/api/conge', congeRoute)
 app.use('/api/document', documentRoute);
+app.use('/api/suggestion', suggestionRoute);
 
 // Planifier le cron pour chaque 1er jour du mois à minuit
 cron.schedule('0 0 1 * *', () => {

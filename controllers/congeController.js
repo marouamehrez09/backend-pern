@@ -4,6 +4,7 @@ const congeRules = require("../utils/congeRules");
 const {getJoursFeriesBetween } = require("../utils/joursFeries");
 const { isBefore, isAfter } = require("date-fns"); 
 const { Sequelize } = require("sequelize");
+const { sendEmail } = require("../utils/mailer");
 
 
 // Créer une demande de congé
@@ -76,7 +77,26 @@ exports.createConge = async (req, res) => {
       employe_id: req.user.id,
     });
 
-    // 7. Mise à jour du solde si le congé utilise du solde (et règle métier l'autorise)
+    // 7. Envoyer un email à l’admin
+    await sendEmail(
+      "maroua.mehrez110989@gmail.com",
+      "📩 Nouvelle demande de congé soumise",
+      `Bonjour,
+    
+    Une nouvelle demande de congé a été soumise par l’employé : ${employe.name}.
+    
+    🗓️ Période : du ${date_debut} au ${date_fin}
+    📌 Type de congé : ${type}
+    📝 Motif : ${motif || "Non précisé"}
+    
+    Veuillez vous connecter à la plateforme pour examiner et traiter cette demande.
+    
+    Cordialement,
+    Système de gestion des congés`
+    );
+    
+
+    // 8. Mise à jour du solde si le congé utilise du solde (et règle métier l'autorise)
     res.status(201).json({ message: "Demande envoyée", conge });
   } catch (err) {
     console.error("Erreur création congé :", err);
@@ -198,6 +218,44 @@ exports.updateStatut = async (req, res) => {
     conge.date_traitement = date_traitement || new Date();
 
     await conge.save();
+
+    const employe = await Employe.findByPk(conge.employe_id);
+
+// Contenu de l'e-mail selon le statut
+let subject = "";
+let message = "";
+
+if (statut === "accepté") {
+  subject = "✅ Confirmation : Demande de congé acceptée";
+  message = `Bonjour ${employe.name},
+
+Nous avons le plaisir de vous informer que votre demande de congé, pour la période du ${conge.date_debut} au ${conge.date_fin}, a été **acceptée**.
+
+Merci de prendre vos dispositions en conséquence.
+
+Nous vous souhaitons un excellent congé.
+
+Cordialement,
+Le service Ressources Humaines`;
+} else if (statut === "refusé") {
+  subject = "❌ Notification : Demande de congé refusée";
+  message = `Bonjour ${employe.name},
+
+Après examen, nous vous informons que votre demande de congé pour la période du ${conge.date_debut} au ${conge.date_fin} a été **refusée**.
+
+📌 Motif du refus : ${commentaire_rh || "Non précisé"}
+
+Pour toute question complémentaire, n'hésitez pas à contacter le service RH.
+
+Cordialement,
+Le service Ressources Humaines`;
+}
+
+
+if (subject && message) {
+  await sendEmail(employe.email, subject, message);
+}
+
 
     res.status(200).json(conge);
   } catch (err) {
