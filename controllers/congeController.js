@@ -78,8 +78,18 @@ exports.createConge = async (req, res) => {
     });
 
     // 7. Envoyer un email à l’admin
+    //  Récupérer tous les admins
+    const admins = await Employe.findAll({
+      where: { role: "admin" },
+      attributes: ["email"]
+    });
+    console.log("Admins trouvés :", admins.map(a => a.email));
+
+    const adminEmails = admins.map(admin => admin.email);
+
+    //  Envoyer l’email à tous les admins
     await sendEmail(
-      "maroua.mehrez110989@gmail.com",
+      adminEmails.join(","),
       "📩 Nouvelle demande de congé soumise",
       `Bonjour,
     
