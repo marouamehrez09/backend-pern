@@ -115,6 +115,7 @@ const deleteEmploye = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
 };*/}
+
 const getProfile = async (req, res) => {
   try {
     const user = await Employe.findByPk(req.user.id, {
