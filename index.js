@@ -12,7 +12,7 @@ const cron = require('node-cron');
 const updateLeaveBalances = require('./utils/updateLeaveBalance');
 const path = require('path');
 const cors = require("cors");
-const setupAdminRoute = require("./routes/setupAdmin");
+
 
 const app = express();
 app.use(express.json());
@@ -35,7 +35,7 @@ app.use('/api/conge', congeRoute)
 app.use('/api/document', documentRoute);
 app.use('/api/suggestion', suggestionRoute);
 app.use('/api/demande', demandeRoute);
-app.use("/api/setup-admin", setupAdminRoute);
+
 
 // Planifier le cron pour chaque 1er jour du mois à minuit
 cron.schedule('0 0 1 * *', () => {
